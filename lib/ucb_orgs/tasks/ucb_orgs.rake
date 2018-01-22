@@ -3,13 +3,8 @@ require "open-uri"
 ORG_UNIT_URL = "https://s3-us-west-2.amazonaws.com/ucb-orgs/org_units/latest.csv"
 
 namespace :ucb_orgs do
-  desc "Sets up the database and imports seed data"
+  desc "Installs migrations to the current project"
   task :install do
-    Rake::Task["ucb_orgs:install_migrations"].invoke
-  end
-
-  desc "Adds migrations to the current project"
-  task :install_migrations do
     puts "Checking for new migrations..."
     migrations_to_add = new_migrations()
     if migrations_to_add.empty?
@@ -35,10 +30,6 @@ namespace :ucb_orgs do
     end
 
     puts "Loading org units..."
-    #require 'yaml'
-    #config = YAML.load_file("#{Rails.root}/config/database.yml")[Rails.env]
-    # TODO: this will be different in > Rails 3
-    #ActiveRecord::Base.establish_connection(config)
     UcbOrgs::OrgUnit.load_from_csv("./latest.csv")
 
     puts "Cleaning up..."
