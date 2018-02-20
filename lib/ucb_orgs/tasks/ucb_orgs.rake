@@ -21,19 +21,12 @@ namespace :ucb_orgs do
   task :update do
     puts "Downloading org units..."
     org_unit_csv = open(ORG_UNIT_URL)
-    begin
-      # this command fails with JRuby on Ubuntu
-      FileUtils.mv(org_unit_csv.path, "./latest.csv")
-    rescue Exception => e
-      # if it chokes, we fall back to a system command, and hope we're not on Windows...
-      `mv #{org_unit_csv.path} ./latest.csv`
-    end
 
     puts "Loading org units..."
-    UcbOrgs::OrgUnit.load_from_csv("./latest.csv")
+    UcbOrgs::OrgUnit.load_from_csv(org_unit_csv.path)
 
     puts "Cleaning up..."
-    FileUtils.remove_file("./latest.csv")
+    FileUtils.remove_file(org_unit_csv.path)
 
     puts "Done."
   end
