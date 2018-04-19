@@ -41,7 +41,7 @@ module UcbOrgs
     def sync_orgs
       ldap_org_entries.each do |ldap_org_entry|
         begin
-          sync_org(ldap_org_entry, index)
+          sync_org(ldap_org_entry)
         rescue Exception => e
           raise UcbOrgs::SyncError.new(ldap_org_entry.try(:code), e)
         end
