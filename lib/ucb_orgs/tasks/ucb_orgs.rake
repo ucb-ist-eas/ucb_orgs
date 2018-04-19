@@ -1,6 +1,4 @@
-require "open-uri"
-
-ORG_UNIT_URL = "https://s3-us-west-2.amazonaws.com/ucb-orgs/org_units/latest.csv"
+require "ucb_orgs/syncer"
 
 namespace :ucb_orgs do
   desc "Installs migrations to the current project"
@@ -18,17 +16,15 @@ namespace :ucb_orgs do
   end
 
   desc "Downloads org unit source file, and loads it into the database"
-  task :update do
-    puts "Downloading org units..."
-    org_unit_csv = open(ORG_UNIT_URL)
-
-    puts "Loading org units..."
-    UcbOrgs::OrgUnit.load_from_csv(org_unit_csv.path)
-
-    puts "Cleaning up..."
-    FileUtils.remove_file(org_unit_csv.path)
-
-    puts "Done."
+  task update: :environment do
+    puts "Updating org units..."
+    begin
+      UcbOrgs::Syncer.sync
+      puts "Done."
+    rescue Exception => e
+      msg = e.respond_to?(:error_details) ? e.error_details : e.to_s
+      puts "Unable to complete sync: #{msg}"
+    end
   end
 
   def migration_source_dir
