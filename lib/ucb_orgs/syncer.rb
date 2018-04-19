@@ -39,7 +39,7 @@ module UcbOrgs
     private
 
     def sync_orgs
-      ldap_org_entries.each_with_index do |ldap_org_entry, index|
+      ldap_org_entries.each do |ldap_org_entry|
         begin
           sync_org(ldap_org_entry, index)
         rescue Exception => e
@@ -58,10 +58,11 @@ module UcbOrgs
         .delete_all
     end
 
-    def sync_org(ldap_org_entry, index)
-      UcbOrgs::OrgUnit.find_or_initialize_by(code: ldap_org_entry.code).tap do |dept|
-        dept.update_attributes!(
-          code: nb_to_string(ldap_org_entry.code),
+    def sync_org(ldap_org_entry)
+      code = nb_to_string(ldap_org_entry.code)
+      UcbOrgs::OrgUnit.find_or_initialize_by(code: code).tap do |org|
+        org.update_attributes!(
+          code: code,
           name: nb_to_string(ldap_org_entry.name),
           level: ldap_org_entry.level,
           level_2: nb_to_string(ldap_org_entry.level_2_code),
@@ -74,7 +75,7 @@ module UcbOrgs
     end
 
     # Net-Ldap returns Net::BER::BerIdentifiedString.
-    # Explicityly confert to String.
+    # Explicityly convert to String.
     def nb_to_string(nb)
       nb.nil? ? nil : nb.to_s
     end
