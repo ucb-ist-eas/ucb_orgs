@@ -29,8 +29,8 @@ module UcbOrgs
     end
 
     def sync
-      UCB::LDAP::Org.root_node  # force load of whole tree
-      self.ldap_org_entries = UCB::LDAP::Org.flattened_tree
+      ::UCB::LDAP::Org.root_node  # force load of whole tree
+      self.ldap_org_entries = ::UCB::LDAP::Org.flattened_tree
 
       sync_orgs
       delete_not_found_in_ldap
