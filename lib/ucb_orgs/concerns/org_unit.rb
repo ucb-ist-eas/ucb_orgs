@@ -1,14 +1,14 @@
 module UcbOrgs
   module Concerns
     module OrgUnit
-      extend ActiveSupport::Concern
+      extend ::ActiveSupport::Concern
 
       module ClassMethods
 
         def load_from_csv(csv_filename)
           CSV.foreach(csv_filename, headers: true) do |row|
             org_unit = UcbOrgs::OrgUnit.find_or_create_by(code: row['CODE'])
-            org_unit.update_attributes(
+            org_unit.update(
               name:  row['NAME'],
               level:  row['LEVEL'].to_i,
               level_2:  row['LEVEL_2'],

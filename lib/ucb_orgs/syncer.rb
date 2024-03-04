@@ -61,7 +61,7 @@ module UcbOrgs
     def sync_org(ldap_org_entry)
       code = nb_to_string(ldap_org_entry.code)
       UcbOrgs::OrgUnit.find_or_initialize_by(code: code).tap do |org|
-        org.update_attributes!(
+        org.update!(
           code: code,
           name: nb_to_string(ldap_org_entry.name),
           level: ldap_org_entry.level,
