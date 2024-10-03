@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> This repo has been moved to Gitlab. It is now read-only, and may eventually be removed.
+
 # UcbOrgs
 
 The ucb_orgs gem is a Rails plugin that provides a model and backing database table for UC Berkeley org units.
